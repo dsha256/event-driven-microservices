@@ -18,6 +18,7 @@ public class ProductsController {
 
     @GetMapping
     public String getProduct() {
+        // Test Spring Cloud API Gateway builtin Load Balancer
         return "HTTP GET Handled " + env.getProperty("local.server.port");
     }
 
