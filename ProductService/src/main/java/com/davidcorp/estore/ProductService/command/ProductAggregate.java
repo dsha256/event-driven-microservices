@@ -1,7 +1,10 @@
 package com.davidcorp.estore.ProductService.command;
 
+import com.davidcorp.estore.ProductService.core.events.ProductCreatedEvent;
 import org.axonframework.commandhandling.CommandHandler;
+import org.axonframework.modelling.command.AggregateLifecycle;
 import org.axonframework.spring.stereotype.Aggregate;
+import org.springframework.beans.BeanUtils;
 
 import java.math.BigDecimal;
 
@@ -23,6 +26,13 @@ public class ProductAggregate {
         if (createProductCommand.getTitle() == null || createProductCommand.getTitle().isBlank()) {
             throw new IllegalArgumentException("Title cannot be empty");
         }
+
+        // Create new ProductCreatedEvent class instance
+        ProductCreatedEvent productCreatedEvent = new ProductCreatedEvent();
+        // Copy the values of the source object(createProductCommand) to a destination object(productCreatedEvent)
+        BeanUtils.copyProperties(createProductCommand, productCreatedEvent);
+        
+        AggregateLifecycle.apply(productCreatedEvent);
     }
 
 }
