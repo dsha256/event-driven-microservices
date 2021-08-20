@@ -43,19 +43,19 @@ public class ProductsCommandController {
         return returnValue;
     }
 
-    @GetMapping
-    public String getProduct() {
-        // Test Spring Cloud API Gateway builtin Load Balancer
-        return "HTTP GET Handled " + env.getProperty("local.server.port");
-    }
-
-    @PutMapping
-    public String updateProduct() {
-        return "HTTP PUT Handled";
-    }
-
-    @DeleteMapping
-    public String deleteProduct() {
-        return "HTTP DELETE Handled";
-    }
+//    @GetMapping
+//    public String getProduct() {
+//        // Test Spring Cloud API Gateway builtin Load Balancer
+//        return "HTTP GET Handled " + env.getProperty("local.server.port");
+//    }
+//
+//    @PutMapping
+//    public String updateProduct() {
+//        return "HTTP PUT Handled";
+//    }
+//
+//    @DeleteMapping
+//    public String deleteProduct() {
+//        return "HTTP DELETE Handled";
+//    }
 }
