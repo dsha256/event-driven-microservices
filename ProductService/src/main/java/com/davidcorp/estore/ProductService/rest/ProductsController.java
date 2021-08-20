@@ -38,7 +38,7 @@ public class ProductsController {
             returnValue = ex.getLocalizedMessage();
         }
 
-        System.out.println(returnValue);
+//        System.out.println(returnValue);
         return returnValue;
     }
 

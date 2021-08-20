@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class ProductEventsHandler {
 
-    private ProductsRepository productsRepository;
+    private final ProductsRepository productsRepository;
 
     public ProductEventsHandler(ProductsRepository productsRepository) {
         this.productsRepository = productsRepository;
@@ -22,7 +22,11 @@ public class ProductEventsHandler {
         ProductEntity productEntity = new ProductEntity();
         BeanUtils.copyProperties(event, productEntity);
 
-        productsRepository.save(productEntity);
+        try {
+            productsRepository.save(productEntity);
+        } catch (IllegalArgumentException ex) {
+            ex.printStackTrace();
+        }
 
     }
 }
