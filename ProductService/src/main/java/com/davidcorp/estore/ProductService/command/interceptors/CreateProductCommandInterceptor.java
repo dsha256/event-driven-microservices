@@ -17,7 +17,7 @@ public class CreateProductCommandInterceptor implements MessageDispatchIntercept
     private static final Logger LOGGER = LoggerFactory.getLogger(CreateProductCommandInterceptor.class);
 
     @Override
-    public BiFunction<Integer, CommandMessage<?>, CommandMessage<?>> handle(List<? extends CommandMessage<?>> list) {
+    public BiFunction<Integer, CommandMessage<?>, CommandMessage<?>> handle(List<? extends CommandMessage<?>> messages) {
 
         return (index, command) -> {
 

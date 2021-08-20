@@ -1,4 +1,4 @@
-package com.davidcorp.estore.ProductService.rest;
+package com.davidcorp.estore.ProductService.command.rest;
 
 import lombok.Data;
 
@@ -10,8 +10,8 @@ import java.math.BigDecimal;
 @Data
 public class CreateProductRestModel {
 
-    @NotBlank(message = "Product title is a required field")
-    private String title;
+//     @NotBlank(message = "Product title is a required field")
+    private String title;   
 
     @Min(value = 1, message = "Price can not be lower than 1")
     private BigDecimal price;

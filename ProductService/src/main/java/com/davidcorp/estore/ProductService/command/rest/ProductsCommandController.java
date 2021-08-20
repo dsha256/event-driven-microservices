@@ -1,7 +1,6 @@
 package com.davidcorp.estore.ProductService.command.rest;
 
 import com.davidcorp.estore.ProductService.command.CreateProductCommand;
-import com.davidcorp.estore.ProductService.rest.CreateProductRestModel;
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
