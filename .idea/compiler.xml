@@ -7,8 +7,9 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="ProductService" />
         <module name="DiscoveryServer" />
+        <module name="OrderService" />
+        <module name="ProductService" />
         <module name="ApiGateway" />
       </profile>
     </annotationProcessing>
@@ -17,6 +18,7 @@
       <module name="CourseApp" target="1.8" />
       <module name="DiscoveryServer" target="11" />
       <module name="FutureXCourseApp" target="11" />
+      <module name="OrderService" target="11" />
       <module name="ProductService" target="11" />
     </bytecodeTargetLevel>
   </component>
@@ -25,6 +27,7 @@
       <module name="ApiGateway" options="-parameters" />
       <module name="CourseApp" options="-parameters" />
       <module name="DiscoveryServer" options="-parameters" />
+      <module name="OrderService" options="-parameters" />
       <module name="ProductService" options="-parameters" />
     </option>
   </component>
