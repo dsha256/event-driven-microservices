@@ -30,7 +30,7 @@ public class ProductEventsHandler {
     }
 
     @EventHandler
-    public void on(ProductCreatedEvent event) {
+    public void on(ProductCreatedEvent event) throws Exception {
 
         ProductEntity productEntity = new ProductEntity();
         BeanUtils.copyProperties(event, productEntity);
@@ -39,6 +39,10 @@ public class ProductEventsHandler {
             productsRepository.save(productEntity);
         } catch (IllegalArgumentException ex) {
             ex.printStackTrace();
+        }
+
+        if (true) {
+            throw new Exception("Forcing exception in the Event Handler class");
         }
 
     }
