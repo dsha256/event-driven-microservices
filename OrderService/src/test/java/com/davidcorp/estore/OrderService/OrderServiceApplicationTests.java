@@ -1,4 +1,4 @@
-package com.davidcorp.estore.orderservice;
+package com.davidcorp.estore.OrderService;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
