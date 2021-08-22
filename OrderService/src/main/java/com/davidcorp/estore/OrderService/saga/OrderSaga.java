@@ -1,6 +1,7 @@
 package com.davidcorp.estore.OrderService.saga;
 
 import com.davidcorp.estoe.core.commands.ReservedProductCommand;
+import com.davidcorp.estoe.core.events.ProductReservedEvent;
 import com.davidcorp.estore.OrderService.core.events.OrderCreatedEvent;
 import org.axonframework.commandhandling.CommandCallback;
 import org.axonframework.commandhandling.CommandMessage;
@@ -36,5 +37,10 @@ public class OrderSaga {
                 }
             }
         });
+    }
+
+    @SagaEventHandler(associationProperty = "orderId")
+    public void on(ProductReservedEvent productReservedEvent) {
+        // Process user payment
     }
 }
