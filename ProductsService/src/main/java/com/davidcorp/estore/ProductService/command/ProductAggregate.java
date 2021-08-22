@@ -1,6 +1,8 @@
 package com.davidcorp.estore.ProductService.command;
 
+import com.davidcorp.estoe.core.commands.CancelProductReservationCommand;
 import com.davidcorp.estoe.core.commands.ReservedProductCommand;
+import com.davidcorp.estoe.core.events.ProductReservationCancelledEvent;
 import com.davidcorp.estoe.core.events.ProductReservedEvent;
 import com.davidcorp.estore.ProductService.core.events.ProductCreatedEvent;
 import org.axonframework.commandhandling.CommandHandler;
@@ -59,6 +61,21 @@ public class ProductAggregate {
                 .build();
 
         AggregateLifecycle.apply(productReservedEvent);
+    }
+
+    @CommandHandler
+    public void handle(CancelProductReservationCommand cancelProductReservationCommand) {
+        ProductReservationCancelledEvent productReservationCancelledEvent =
+                ProductReservationCancelledEvent.builder()
+                        .orderId(cancelProductReservationCommand.getOrderId())
+                        .productId(cancelProductReservationCommand.getProductId())
+                        .quantity(cancelProductReservationCommand.getQuantity())
+                        .reason(cancelProductReservationCommand.getReason())
+                        .userId(cancelProductReservationCommand.getUserId())
+                        .build();
+
+        AggregateLifecycle.apply(productReservationCancelledEvent);
+        
     }
 
     @EventSourcingHandler
