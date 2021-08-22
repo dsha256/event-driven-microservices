@@ -102,7 +102,7 @@ public class OrderSaga {
         }
 
         if (result == null) {
-            LOGGER.info("The ProcessPaymentCommand resulted inNULL. Initiating a compensating transaction");
+            LOGGER.info("The ProcessPaymentCommand resulted   inNULL. Initiating a compensating transaction");
             // Start compensating transaction
         }
     }
@@ -111,6 +111,6 @@ public class OrderSaga {
     public void handle(PaymentProcessedEvent paymentProcessedEvent) {
         // Send an ApproveOrderCommand
         ApproveOrderCommand approveOrderCommand  = new ApproveOrderCommand(paymentProcessedEvent.getOrderId());
-        commandGateway.send(approveOrderCommand);   
+        commandGateway.send(approveOrderCommand);
     }
 }

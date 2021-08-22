@@ -1,8 +1,10 @@
 package com.davidcorp.estore.OrderService.command;
 
+import com.davidcorp.estore.OrderService.command.commands.ApproveOrderCommand;
 import com.davidcorp.estore.OrderService.command.commands.CreateOrderCommand;
-import com.davidcorp.estore.OrderService.core.model.OrderStatus;
+import com.davidcorp.estore.OrderService.core.events.OrderApprovedEvent;
 import com.davidcorp.estore.OrderService.core.events.OrderCreatedEvent;
+import com.davidcorp.estore.OrderService.core.model.OrderStatus;
 import org.axonframework.commandhandling.CommandHandler;
 import org.axonframework.eventsourcing.EventSourcingHandler;
 import org.axonframework.modelling.command.AggregateIdentifier;
@@ -14,7 +16,7 @@ import org.springframework.beans.BeanUtils;
 public class OrderAggregate {
 
     @AggregateIdentifier
-        private String orderId;
+    private String orderId;
     private String userId;
     private String productId;
     private int quantity;
@@ -51,5 +53,19 @@ public class OrderAggregate {
         this.quantity = orderCreatedEvent.getQuantity();
         this.addressId = orderCreatedEvent.getAddressId();
         this.orderStatus = orderCreatedEvent.getOrderStatus();
+    }
+
+    @CommandHandler
+    public void handle(ApproveOrderCommand approveOrderCommand) {
+        // Create and publish the OrderApprovedEvent
+
+        OrderApprovedEvent orderApprovedEvent = new OrderApprovedEvent(approveOrderCommand.getOrderId());
+
+        AggregateLifecycle.apply(orderApprovedEvent);
+    }
+
+    @EventSourcingHandler
+    protected void on(OrderApprovedEvent orderApprovedEvent) {
+        this.orderStatus = orderApprovedEvent.getOrderStatus();
     }
 }
