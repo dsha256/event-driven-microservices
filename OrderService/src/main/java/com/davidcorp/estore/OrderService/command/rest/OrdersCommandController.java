@@ -1,9 +1,8 @@
 package com.davidcorp.estore.OrderService.command.rest;
 
-import com.davidcorp.estore.OrderService.OrderStatus;
-import com.davidcorp.estore.OrderService.command.CreateOrderCommand;
+import com.davidcorp.estore.OrderService.command.commands.CreateOrderCommand;
+import com.davidcorp.estore.OrderService.core.model.OrderStatus;
 import org.axonframework.commandhandling.gateway.CommandGateway;
-import org.springframework.core.env.Environment;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,28 +15,26 @@ import java.util.UUID;
 @RequestMapping("/orders")
 public class OrdersCommandController {
 
-    private final Environment env;
     private final CommandGateway commandGateway;
 
-    public OrdersCommandController(Environment env, CommandGateway commandGateway) {
-        this.env = env;
+    public OrdersCommandController(CommandGateway commandGateway) {
         this.commandGateway = commandGateway;
     }
 
     @PostMapping
-    public String createCommand(@Valid @RequestBody CreateProductRestModel createProductRestModel) {
+    public String createCommand(@Valid @RequestBody OrderCreateRest order) {
+
+        String userId = "27b95829-4f3f-4ddf-8983-151ba010e35b";
 
         CreateOrderCommand createOrderCommand = CreateOrderCommand.builder()
                 .orderId(UUID.randomUUID().toString())
-                .userId("27b95829-4f3f-4ddf-8983-151ba010e35b")
-                .productId(createProductRestModel.getProductId())
-                .quantity(createProductRestModel.getQuantity())
-                .addressId(createProductRestModel.getAddressId())
-                .orderStatus(OrderStatus.CREATED).build();
+                .userId(userId)
+                .productId(order.getProductId())
+                .quantity(order.getQuantity())
+                .addressId(order.getAddressId())
+                .orderStatus(OrderStatus.CREATED)
+                .build();
 
-        String returnValue;
-
-        returnValue = commandGateway.sendAndWait(createOrderCommand);
-        return returnValue;
+        return commandGateway.sendAndWait(createOrderCommand);
     }
 }

@@ -1,6 +1,6 @@
-package com.davidcorp.estore.OrderService.command;
+package com.davidcorp.estore.OrderService.command.commands;
 
-import com.davidcorp.estore.OrderService.OrderStatus;
+import com.davidcorp.estore.OrderService.core.model.OrderStatus;
 import lombok.Builder;
 import lombok.Data;
 

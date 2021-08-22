@@ -7,7 +7,7 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 
 @Data
-public class CreateProductRestModel {
+public class OrderCreateRest {
 
     @NotBlank(message = "Product title is a required field")
     private String productId;

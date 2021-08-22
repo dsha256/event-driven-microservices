@@ -1,6 +1,7 @@
 package com.davidcorp.estore.OrderService.command;
 
-import com.davidcorp.estore.OrderService.OrderStatus;
+import com.davidcorp.estore.OrderService.command.commands.CreateOrderCommand;
+import com.davidcorp.estore.OrderService.core.model.OrderStatus;
 import com.davidcorp.estore.OrderService.core.events.OrderCreatedEvent;
 import org.axonframework.commandhandling.CommandHandler;
 import org.axonframework.eventsourcing.EventSourcingHandler;
