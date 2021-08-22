@@ -9,9 +9,10 @@
         <outputRelativeToContentRoot value="true" />
         <module name="DiscoveryServer" />
         <module name="UsersService" />
+        <module name="PaymentsService" />
+        <module name="ProductService" />
         <module name="OrderService" />
         <module name="ApiGateway" />
-        <module name="ProductService" />
         <module name="Core" />
       </profile>
     </annotationProcessing>
@@ -23,6 +24,7 @@
       <module name="FutureXCourseApp" target="11" />
       <module name="OrderService" target="11" />
       <module name="OrdersService" target="11" />
+      <module name="PaymentsService" target="11" />
       <module name="ProductService" target="11" />
       <module name="ProductsService" target="11" />
       <module name="UsersService" target="11" />
@@ -36,6 +38,7 @@
       <module name="DiscoveryServer" options="-parameters" />
       <module name="OrderService" options="-parameters" />
       <module name="OrdersService" options="-parameters" />
+      <module name="PaymentsService" options="-parameters" />
       <module name="ProductService" options="-parameters" />
       <module name="ProductsService" options="-parameters" />
       <module name="UsersService" options="-parameters" />
