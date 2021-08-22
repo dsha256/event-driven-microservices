@@ -35,7 +35,7 @@ public class OrderEventsHandler {
         }
 
         orderEntity.setOrderStatus(orderApprovedEvent.getOrderStatus());
-        
+
         ordersRepository.save(orderEntity);
     }
 }
