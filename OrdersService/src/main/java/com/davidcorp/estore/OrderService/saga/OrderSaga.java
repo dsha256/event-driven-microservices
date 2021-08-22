@@ -1,5 +1,6 @@
 package com.davidcorp.estore.OrderService.saga;
 
+import com.davidcorp.estoe.core.commands.CancelProductReservationCommand;
 import com.davidcorp.estoe.core.commands.ProcessPaymentCommand;
 import com.davidcorp.estoe.core.commands.ReservedProductCommand;
 import com.davidcorp.estoe.core.events.PaymentProcessedEvent;
@@ -16,7 +17,6 @@ import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.axonframework.messaging.responsetypes.ResponseTypes;
 import org.axonframework.modelling.saga.EndSaga;
 import org.axonframework.modelling.saga.SagaEventHandler;
-import org.axonframework.modelling.saga.SagaLifecycle;
 import org.axonframework.modelling.saga.StartSaga;
 import org.axonframework.queryhandling.QueryGateway;
 import org.axonframework.spring.stereotype.Saga;
@@ -79,11 +79,13 @@ public class OrderSaga {
             LOGGER.error(ex.getMessage());
 
             // Start compensating transaction
+            cancelProductReservation(productReservedEvent, ex.getMessage());
             return;
         }
 
         if (userPaymentDetails == null) {
             // Start compensating transaction
+            cancelProductReservation(productReservedEvent, "Could not fetch user payment details");
             return;
         }
 
@@ -102,19 +104,35 @@ public class OrderSaga {
         } catch (Exception ex) {
             LOGGER.error(ex.getMessage());
             // Start compensating transaction
+            cancelProductReservation(productReservedEvent, ex.getMessage());
+            return;
         }
 
         if (result == null) {
-            LOGGER.info("The ProcessPaymentCommand resulted   inNULL. Initiating a compensating transaction");
+            LOGGER.info("The ProcessPaymentCommand resulted in NULL. Initiating a compensating transaction");
             // Start compensating transaction
+            cancelProductReservation(productReservedEvent, "Could not process user payment with provided payment details");
         }
     }
 
     @SagaEventHandler(associationProperty = "orderId")
     public void handle(PaymentProcessedEvent paymentProcessedEvent) {
         // Send an ApproveOrderCommand
-        ApproveOrderCommand approveOrderCommand  = new ApproveOrderCommand(paymentProcessedEvent.getOrderId());
+        ApproveOrderCommand approveOrderCommand = new ApproveOrderCommand(paymentProcessedEvent.getOrderId());
         commandGateway.send(approveOrderCommand);
+    }
+
+    private void cancelProductReservation(ProductReservedEvent productReservedEvent, String reason) {
+        CancelProductReservationCommand cancelProductReservationCommand =
+                CancelProductReservationCommand.builder()
+                        .orderId(productReservedEvent.getOrderId())
+                        .productId(productReservedEvent.getProductId())
+                        .quantity(productReservedEvent.getQuantity())
+                        .userId(productReservedEvent.getUserId())
+                        .reason(reason)
+                        .build();
+
+        commandGateway.send(cancelProductReservationCommand);
     }
 
     @EndSaga
