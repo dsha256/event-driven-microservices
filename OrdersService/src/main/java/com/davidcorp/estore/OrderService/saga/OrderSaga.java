@@ -2,23 +2,32 @@ package com.davidcorp.estore.OrderService.saga;
 
 import com.davidcorp.estoe.core.commands.ReservedProductCommand;
 import com.davidcorp.estoe.core.events.ProductReservedEvent;
+import com.davidcorp.estoe.core.model.User;
+import com.davidcorp.estoe.core.query.FetchUserPaymentDetailsQuery;
 import com.davidcorp.estore.OrderService.core.events.OrderCreatedEvent;
 import org.axonframework.commandhandling.CommandCallback;
 import org.axonframework.commandhandling.CommandMessage;
 import org.axonframework.commandhandling.CommandResultMessage;
 import org.axonframework.commandhandling.gateway.CommandGateway;
+import org.axonframework.messaging.responsetypes.ResponseTypes;
 import org.axonframework.modelling.saga.SagaEventHandler;
 import org.axonframework.modelling.saga.StartSaga;
+import org.axonframework.queryhandling.QueryGateway;
 import org.axonframework.spring.stereotype.Saga;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.concurrent.CompletableFuture;
 
 @Saga
 public class OrderSaga {
 
     @Autowired
     private transient CommandGateway commandGateway;
+
+    @Autowired
+    private transient QueryGateway queryGateway;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(OrderSaga.class);
 
@@ -51,5 +60,27 @@ public class OrderSaga {
         // Process user payment
         LOGGER.info("ProductReservedEvent is called for productId: " + productReservedEvent.getProductId() +
                 " and orderId: " + productReservedEvent.getOrderId());
+
+        FetchUserPaymentDetailsQuery  fetchUserPaymentDetailsQuery =
+                new FetchUserPaymentDetailsQuery(productReservedEvent.getUserId());
+
+        User userPaymentDetails = null;
+
+        try {
+            userPaymentDetails = queryGateway.query(fetchUserPaymentDetailsQuery, ResponseTypes.instanceOf(User.class)).join();
+        } catch (Exception ex) {
+            LOGGER.error(ex.getMessage());
+
+            // Start compensating transaction
+            return;
+        }
+
+        if (userPaymentDetails == null) {
+            // Start compensating transaction
+            return;
+        }
+
+        LOGGER.info("Successfully fetched user payment details for user " + userPaymentDetails.getFirstName());
+
     }
 }

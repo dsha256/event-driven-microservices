@@ -1,10 +1,11 @@
 package com.davidcorp.estoe.core.query;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
 @Data
-@Builder
+@AllArgsConstructor
 public class FetchUserPaymentDetailsQuery {
     private final String userId;
 }
