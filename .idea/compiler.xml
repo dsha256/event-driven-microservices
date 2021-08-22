@@ -11,10 +11,12 @@
         <module name="OrderService" />
         <module name="ProductService" />
         <module name="ApiGateway" />
+        <module name="Core" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="ApiGateway" target="11" />
+      <module name="Core" target="11" />
       <module name="CourseApp" target="1.8" />
       <module name="DiscoveryServer" target="11" />
       <module name="FutureXCourseApp" target="11" />
@@ -25,6 +27,7 @@
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="ApiGateway" options="-parameters" />
+      <module name="Core" options="-parameters" />
       <module name="CourseApp" options="-parameters" />
       <module name="DiscoveryServer" options="-parameters" />
       <module name="OrderService" options="-parameters" />
