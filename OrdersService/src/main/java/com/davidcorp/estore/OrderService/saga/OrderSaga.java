@@ -4,10 +4,12 @@ import com.davidcorp.estoe.core.commands.CancelProductReservationCommand;
 import com.davidcorp.estoe.core.commands.ProcessPaymentCommand;
 import com.davidcorp.estoe.core.commands.ReservedProductCommand;
 import com.davidcorp.estoe.core.events.PaymentProcessedEvent;
+import com.davidcorp.estoe.core.events.ProductReservationCancelledEvent;
 import com.davidcorp.estoe.core.events.ProductReservedEvent;
 import com.davidcorp.estoe.core.model.User;
 import com.davidcorp.estoe.core.query.FetchUserPaymentDetailsQuery;
 import com.davidcorp.estore.OrderService.command.commands.ApproveOrderCommand;
+import com.davidcorp.estore.OrderService.command.commands.RejectOrderCommand;
 import com.davidcorp.estore.OrderService.core.events.OrderApprovedEvent;
 import com.davidcorp.estore.OrderService.core.events.OrderCreatedEvent;
 import org.axonframework.commandhandling.CommandCallback;
@@ -115,13 +117,6 @@ public class OrderSaga {
         }
     }
 
-    @SagaEventHandler(associationProperty = "orderId")
-    public void handle(PaymentProcessedEvent paymentProcessedEvent) {
-        // Send an ApproveOrderCommand
-        ApproveOrderCommand approveOrderCommand = new ApproveOrderCommand(paymentProcessedEvent.getOrderId());
-        commandGateway.send(approveOrderCommand);
-    }
-
     private void cancelProductReservation(ProductReservedEvent productReservedEvent, String reason) {
         CancelProductReservationCommand cancelProductReservationCommand =
                 CancelProductReservationCommand.builder()
@@ -135,10 +130,27 @@ public class OrderSaga {
         commandGateway.send(cancelProductReservationCommand);
     }
 
+    @SagaEventHandler(associationProperty = "orderId")
+    public void handle(PaymentProcessedEvent paymentProcessedEvent) {
+        // Send an ApproveOrderCommand
+        ApproveOrderCommand approveOrderCommand = new ApproveOrderCommand(paymentProcessedEvent.getOrderId());
+        commandGateway.send(approveOrderCommand);
+    }
+
     @EndSaga
     @SagaEventHandler(associationProperty = "orderId")
     public void handle(OrderApprovedEvent orderApprovedEvent) {
         LOGGER.info("Order is approved.  Order Saga is complete for orderId: " + orderApprovedEvent.getOrderId());
         // SagaLifecycle.end();
+    }
+
+    @SagaEventHandler(associationProperty = "orderId")
+    public void handle(ProductReservationCancelledEvent productReservationCancelledEvent) {
+        // Create and sent a RejectOrderCommand
+        RejectOrderCommand rejectOrderCommand = new RejectOrderCommand(
+                productReservationCancelledEvent.getOrderId(),
+                productReservationCancelledEvent.getReason()
+        );
+        commandGateway.send(rejectOrderCommand);
     }
 }

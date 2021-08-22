@@ -75,7 +75,12 @@ public class ProductAggregate {
                         .build();
 
         AggregateLifecycle.apply(productReservationCancelledEvent);
-        
+
+    }
+
+    @EventSourcingHandler
+    public void on(ProductReservationCancelledEvent productReservationCancelledEvent) {
+        this.quantity += productReservationCancelledEvent.getQuantity();
     }
 
     @EventSourcingHandler

@@ -1,5 +1,6 @@
 package com.davidcorp.estore.ProductService.query;
 
+import com.davidcorp.estoe.core.events.ProductReservationCancelledEvent;
 import com.davidcorp.estoe.core.events.ProductReservedEvent;
 import com.davidcorp.estore.ProductService.core.data.ProductEntity;
 import com.davidcorp.estore.ProductService.core.data.ProductsRepository;
@@ -54,5 +55,15 @@ public class ProductEventsHandler {
 
         LOGGER.info("ProductReservedEvent is called for productId: " + productReservedEvent.getProductId() +
                 " and orderId: " + productReservedEvent.getOrderId());
+    }
+
+    @EventHandler
+    public void on(ProductReservationCancelledEvent productReservationCancelledEvent) {
+        ProductEntity currentlyStoredProduct = productsRepository.findByProductId(productReservationCancelledEvent.getProductId());
+
+        int newQuantity = currentlyStoredProduct.getQuantity() + productReservationCancelledEvent.getQuantity();
+        currentlyStoredProduct.setQuantity(newQuantity);
+
+        productsRepository.save(currentlyStoredProduct);
     }
 }
