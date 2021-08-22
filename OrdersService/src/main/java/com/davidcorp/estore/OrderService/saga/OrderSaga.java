@@ -2,9 +2,11 @@ package com.davidcorp.estore.OrderService.saga;
 
 import com.davidcorp.estoe.core.commands.ProcessPaymentCommand;
 import com.davidcorp.estoe.core.commands.ReservedProductCommand;
+import com.davidcorp.estoe.core.events.PaymentProcessedEvent;
 import com.davidcorp.estoe.core.events.ProductReservedEvent;
 import com.davidcorp.estoe.core.model.User;
 import com.davidcorp.estoe.core.query.FetchUserPaymentDetailsQuery;
+import com.davidcorp.estore.OrderService.command.commands.ApproveOrderCommand;
 import com.davidcorp.estore.OrderService.core.events.OrderCreatedEvent;
 import org.axonframework.commandhandling.CommandCallback;
 import org.axonframework.commandhandling.CommandMessage;
@@ -18,10 +20,8 @@ import org.axonframework.spring.stereotype.Saga;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.logging.LoggerGroup;
 
 import java.util.UUID;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 
 @Saga
@@ -65,7 +65,7 @@ public class OrderSaga {
         LOGGER.info("ProductReservedEvent is called for productId: " + productReservedEvent.getProductId() +
                 " and orderId: " + productReservedEvent.getOrderId());
 
-        FetchUserPaymentDetailsQuery  fetchUserPaymentDetailsQuery =
+        FetchUserPaymentDetailsQuery fetchUserPaymentDetailsQuery =
                 new FetchUserPaymentDetailsQuery(productReservedEvent.getUserId());
 
         User userPaymentDetails = null;
@@ -105,5 +105,12 @@ public class OrderSaga {
             LOGGER.info("The ProcessPaymentCommand resulted inNULL. Initiating a compensating transaction");
             // Start compensating transaction
         }
+    }
+
+    @SagaEventHandler(associationProperty = "orderId")
+    public void handle(PaymentProcessedEvent paymentProcessedEvent) {
+        // Send an ApproveOrderCommand
+        ApproveOrderCommand approveOrderCommand  = new ApproveOrderCommand(paymentProcessedEvent.getOrderId());
+        commandGateway.send(approveOrderCommand);   
     }
 }
