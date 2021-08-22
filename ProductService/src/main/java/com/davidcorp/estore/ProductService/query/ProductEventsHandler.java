@@ -1,5 +1,6 @@
 package com.davidcorp.estore.ProductService.query;
 
+import com.davidcorp.estoe.core.events.ProductReservedEvent;
 import com.davidcorp.estore.ProductService.core.data.ProductEntity;
 import com.davidcorp.estore.ProductService.core.data.ProductsRepository;
 import com.davidcorp.estore.ProductService.core.events.ProductCreatedEvent;
@@ -40,10 +41,12 @@ public class ProductEventsHandler {
         } catch (IllegalArgumentException ex) {
             ex.printStackTrace();
         }
+    }
 
-        if (true) {
-            throw new Exception("Forcing exception in the Event Handler class");
-        }
-
+    @EventHandler
+    public void on(ProductReservedEvent productReservedEvent) {
+        ProductEntity productEntity = productsRepository.findByProductId(productReservedEvent.getProductId());
+        productEntity.setQuantity(productEntity.getQuantity() - productReservedEvent.getQuantity());
+        productsRepository.save(productEntity);
     }
 }
