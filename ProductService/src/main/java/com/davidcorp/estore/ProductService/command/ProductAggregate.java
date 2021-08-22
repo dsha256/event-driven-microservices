@@ -1,5 +1,6 @@
 package com.davidcorp.estore.ProductService.command;
 
+import com.davidcorp.estoe.core.commands.ReservedProductCommand;
 import com.davidcorp.estore.ProductService.core.events.ProductCreatedEvent;
 import org.axonframework.commandhandling.CommandHandler;
 import org.axonframework.eventsourcing.EventSourcingHandler;
@@ -40,6 +41,14 @@ public class ProductAggregate {
         BeanUtils.copyProperties(createProductCommand, productCreatedEvent);
 
         AggregateLifecycle.apply(productCreatedEvent);
+    }
+
+    @CommandHandler
+    public void handle(ReservedProductCommand reserveProductCommand) {
+
+        if (quantity < reserveProductCommand.getQuantity()) {
+            throw new IllegalArgumentException("Insufficient number of items in stock");
+        }
     }
 
     @EventSourcingHandler
