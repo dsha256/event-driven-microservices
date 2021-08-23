@@ -2,8 +2,10 @@ package com.davidcorp.estore.OrderService.command;
 
 import com.davidcorp.estore.OrderService.command.commands.ApproveOrderCommand;
 import com.davidcorp.estore.OrderService.command.commands.CreateOrderCommand;
+import com.davidcorp.estore.OrderService.command.commands.RejectOrderCommand;
 import com.davidcorp.estore.OrderService.core.events.OrderApprovedEvent;
 import com.davidcorp.estore.OrderService.core.events.OrderCreatedEvent;
+import com.davidcorp.estore.OrderService.core.events.OrderRejectedEvent;
 import com.davidcorp.estore.OrderService.core.model.OrderStatus;
 import org.axonframework.commandhandling.CommandHandler;
 import org.axonframework.eventsourcing.EventSourcingHandler;
@@ -67,5 +69,20 @@ public class OrderAggregate {
     @EventSourcingHandler
     protected void on(OrderApprovedEvent orderApprovedEvent) {
         this.orderStatus = orderApprovedEvent.getOrderStatus();
+    }
+
+    @CommandHandler
+    public void handle(RejectOrderCommand rejectOrderCommand) {
+
+        OrderRejectedEvent orderRejectedEvent =new OrderRejectedEvent(
+                rejectOrderCommand.getOrderId(),
+                rejectOrderCommand.getReason());
+
+        AggregateLifecycle.apply(orderRejectedEvent);
+    }
+
+    @EventSourcingHandler
+    public void on(OrderRejectedEvent orderRejectedEvent) {
+        this.orderStatus = orderRejectedEvent.getOrderStatus();
     }
 }

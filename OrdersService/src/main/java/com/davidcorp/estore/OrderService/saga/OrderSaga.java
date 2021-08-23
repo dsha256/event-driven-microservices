@@ -12,6 +12,7 @@ import com.davidcorp.estore.OrderService.command.commands.ApproveOrderCommand;
 import com.davidcorp.estore.OrderService.command.commands.RejectOrderCommand;
 import com.davidcorp.estore.OrderService.core.events.OrderApprovedEvent;
 import com.davidcorp.estore.OrderService.core.events.OrderCreatedEvent;
+import com.davidcorp.estore.OrderService.core.events.OrderRejectedEvent;
 import org.axonframework.commandhandling.CommandCallback;
 import org.axonframework.commandhandling.CommandMessage;
 import org.axonframework.commandhandling.CommandResultMessage;
@@ -152,5 +153,11 @@ public class OrderSaga {
                 productReservationCancelledEvent.getReason()
         );
         commandGateway.send(rejectOrderCommand);
+    }
+
+    @EndSaga
+    @SagaEventHandler(associationProperty = "orderId")
+    public void handle(OrderRejectedEvent orderRejectedEvent) {
+        LOGGER.info("Successfully rejected order with id " + orderRejectedEvent.getOrderId());
     }
 }
