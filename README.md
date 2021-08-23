@@ -85,11 +85,6 @@
              src="https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white"/>
 </a>
 <a href="#">
-        <img alt="OAuth2"
-             src="https://img.shields.io/badge/OAuth-2C2D72?style=for-the-badge&logo=OAuth&logoColor=white"/>
-</a>
-
-<a href="#">
         <img alt="InteliJ IDEA"
              src="https://img.shields.io/badge/IntelliJ%20IDEA-143?style=for-the-badge&logo=IntelliJ%20IDEA&logoColor=black&color=black&labelColor=yellow">
 </a>
