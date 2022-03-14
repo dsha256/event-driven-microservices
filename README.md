@@ -1,4 +1,4 @@
-# Spring-Security-Demo-App
+# Event-driven Microservices
 
 
 ## Used Technologies
